@@ -1,4 +1,28 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Zyric App
+
+A React Native application with a splash screen and home screen, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+
+## Features
+
+- 🚀 **Splash Screen** - Displays for 2.5 seconds before navigating to home
+- 🏠 **Home Screen** - Main screen with modern UI design
+- 🧭 **React Navigation** - Smooth navigation between screens
+- 📱 **TypeScript** - Type-safe code throughout the app
+
+## Project Structure
+
+```
+ZyricApp/
+├── src/
+│   ├── navigation/
+│   │   ├── AppNavigator.tsx    # Navigation configuration
+│   │   └── types.ts            # TypeScript types for navigation
+│   └── screens/
+│       ├── SplashScreen.tsx    # Initial splash screen
+│       └── HomeScreen.tsx      # Main home screen
+├── App.tsx                      # App entry point
+└── package.json
+```
 
 # Getting Started
 
