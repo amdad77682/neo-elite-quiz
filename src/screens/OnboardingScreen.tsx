@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -66,14 +66,17 @@ const OnboardingScreen: React.FC<Props> = ({navigation}) => {
 
   const viewConfig = useRef({viewAreaCoveragePercentThreshold: 50}).current;
 
-  const handleNext = () => {
-    if (currentIndex < onboardingData.length - 1) {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const nextIndex = (currentIndex + 1) % onboardingData.length;
       flatListRef.current?.scrollToIndex({
-        index: currentIndex + 1,
+        index: nextIndex,
         animated: true,
       });
-    }
-  };
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [currentIndex]);
 
   const handleGetStarted = () => {
     navigation.replace('Login');
@@ -167,21 +170,13 @@ const OnboardingScreen: React.FC<Props> = ({navigation}) => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity onPress={handleGetStarted}>
-            <Text style={styles.loginText}>
-              I Already have an Account? <Text style={styles.loginLink}>Log in</Text>
-            </Text>
+          <TouchableOpacity  onPress={handleGetStarted}>
+           <Text style={styles.loginButton}> I Already have an Account? Log in</Text>
           </TouchableOpacity>
         </View>
-
-        {currentIndex < onboardingData.length - 1 && (
-          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-            <Text style={styles.nextButtonText}>▶</Text>
-          </TouchableOpacity>
-        )}
       </View>
     </View>
-  );
+  );   
 };
 
 const styles = StyleSheet.create({
@@ -217,22 +212,30 @@ const styles = StyleSheet.create({
     top: 250,
     left: 100,
   },
+  loginButton:{
+    marginTop:20,
+    textAlign:'center',
+    color:'rgba(255, 255, 255, 0.8)',
+  },
+
   slide: {
     width: SCREEN_WIDTH,
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 100,
+    paddingTop: 0,
   },
   emojiContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 60,
   },
   emoji: {
     fontSize: 140,
   },
   textContainer: {
-    alignItems: 'center',
-    paddingHorizontal: 40,
+    alignItems: 'flex-start',
+    paddingHorizontal: 20,
   },
   subtitle: {
     fontSize: 16,
@@ -243,7 +246,6 @@ const styles = StyleSheet.create({
     fontSize: 42,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    textAlign: 'center',
     lineHeight: 50,
   },
   bottomContainer: {
