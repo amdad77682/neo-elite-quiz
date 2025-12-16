@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import {ChevronLeft} from 'lucide-react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/types';
@@ -31,6 +32,7 @@ const RegisterDetailsScreen: React.FC<Props> = ({navigation, route}) => {
   const [age, setAge] = useState('');
   const [organization, setOrganization] = useState('');
   const [gender, setGender] = useState<'male' | 'female' | ''>('');
+  const [role, setRole] = useState<'student' | 'teacher'>('student');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -44,6 +46,7 @@ const RegisterDetailsScreen: React.FC<Props> = ({navigation, route}) => {
       age,
       organization,
       gender,
+      role,
     });
   };
 
@@ -58,7 +61,7 @@ const RegisterDetailsScreen: React.FC<Props> = ({navigation, route}) => {
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>←</Text>
+            <ChevronLeft size={24} color="#1E1E1E" />
           </TouchableOpacity>
 
           <Text style={styles.title}>Let's Get Started 🤝</Text>
@@ -139,6 +142,43 @@ const RegisterDetailsScreen: React.FC<Props> = ({navigation, route}) => {
               </View>
               <Text style={styles.genderIcon}>👩</Text>
               <Text style={styles.genderText}>Female</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Choose your Role</Text>
+          <View style={styles.genderContainer}>
+            <TouchableOpacity
+              style={[
+                styles.genderButton,
+                role === 'student' && styles.genderButtonActive,
+              ]}
+              onPress={() => setRole('student')}>
+              <View
+                style={[
+                  styles.radioOuter,
+                  role === 'student' && styles.radioOuterActive,
+                ]}>
+                {role === 'student' && <View style={styles.radioInner} />}
+              </View>
+              <Text style={styles.genderIcon}>🎓</Text>
+              <Text style={styles.genderText}>Student</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.genderButton,
+                role === 'teacher' && styles.genderButtonActive,
+              ]}
+              onPress={() => setRole('teacher')}>
+              <View
+                style={[
+                  styles.radioOuter,
+                  role === 'teacher' && styles.radioOuterActive,
+                ]}>
+                {role === 'teacher' && <View style={styles.radioInner} />}
+              </View>
+              <Text style={styles.genderIcon}>👨‍🏫</Text>
+              <Text style={styles.genderText}>Teacher</Text>
             </TouchableOpacity>
           </View>
 

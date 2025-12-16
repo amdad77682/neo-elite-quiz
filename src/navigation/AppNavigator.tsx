@@ -25,6 +25,12 @@ import ExamDetailsScreen from '../screens/ExamDetailsScreen';
 import ExamQuestionScreen from '../screens/ExamQuestionScreen';
 import ExamResultScreen from '../screens/ExamResultScreen';
 import ExamSolutionScreen from '../screens/ExamSolutionScreen';
+import TeacherDashboardScreen from '../screens/teacher/TeacherDashboardScreen';
+import StudentAnalyticsScreen from '../screens/teacher/StudentAnalyticsScreen';
+import StudentListScreen from '../screens/teacher/StudentListScreen';
+import TeacherExamListScreen from '../screens/teacher/TeacherExamListScreen';
+import TeacherProfileScreen from '../screens/teacher/TeacherProfileScreen';
+import StudentProfileScreen from '../screens/student/StudentProfileScreen';
 import {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -61,6 +67,12 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen name="ExamQuestion" component={ExamQuestionScreen} />
         <Stack.Screen name="ExamResult" component={ExamResultScreen} />
         <Stack.Screen name="ExamSolution" component={ExamSolutionScreen} />
+        <Stack.Screen name="TeacherDashboard" component={TeacherDashboardScreen} />
+        <Stack.Screen name="StudentAnalytics" component={StudentAnalyticsScreen} />
+        <Stack.Screen name="StudentList" component={StudentListScreen} />
+        <Stack.Screen name="TeacherExamList" component={TeacherExamListScreen} />
+        <Stack.Screen name="TeacherProfile" component={TeacherProfileScreen} />
+        <Stack.Screen name="StudentProfile" component={StudentProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import {ChevronLeft} from 'lucide-react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/types';
@@ -37,7 +38,7 @@ const ProfilePictureScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const handleContinue = () => {
-    navigation.navigate('Welcome');
+    navigation.navigate('Welcome', {role: route.params.role});
   };
 
   return (
@@ -46,7 +47,7 @@ const ProfilePictureScreen: React.FC<Props> = ({navigation, route}) => {
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>←</Text>
+          <ChevronLeft size={24} color="#1E1E1E" />
         </TouchableOpacity>
 
         <Text style={styles.title}>Profile Picture 📸</Text>

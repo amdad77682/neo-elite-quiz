@@ -25,10 +25,11 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState<'student' | 'teacher'>('student');
 
   const handleLogin = () => {
-    // Navigate to home after login
-    navigation.navigate('Home');
+    // Navigate to home after login with selected role
+    navigation.navigate('Home', {role});
   };
 
   const handleForgotPassword = () => {
@@ -49,6 +50,43 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
         <View style={styles.content}>
           <Text style={styles.welcomeText}>Welcome Back! Glad</Text>
           <Text style={styles.welcomeText}>To See You, Again! 👋</Text>
+
+          <Text style={styles.label}>Login as</Text>
+          <View style={styles.roleContainer}>
+            <TouchableOpacity
+              style={[
+                styles.roleButton,
+                role === 'student' && styles.roleButtonActive,
+              ]}
+              onPress={() => setRole('student')}>
+              <View
+                style={[
+                  styles.radioOuter,
+                  role === 'student' && styles.radioOuterActive,
+                ]}>
+                {role === 'student' && <View style={styles.radioInner} />}
+              </View>
+              <Text style={styles.roleIcon}>🎓</Text>
+              <Text style={styles.roleText}>Student</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.roleButton,
+                role === 'teacher' && styles.roleButtonActive,
+              ]}
+              onPress={() => setRole('teacher')}>
+              <View
+                style={[
+                  styles.radioOuter,
+                  role === 'teacher' && styles.radioOuterActive,
+                ]}>
+                {role === 'teacher' && <View style={styles.radioInner} />}
+              </View>
+              <Text style={styles.roleIcon}>👨‍🏫</Text>
+              <Text style={styles.roleText}>Teacher</Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -140,6 +178,60 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1E1E1E',
     marginBottom: 4,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1E1E1E',
+    marginTop: 24,
+    marginBottom: 12,
+  },
+  roleContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 8,
+  },
+  roleButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F7F8F9',
+    borderRadius: 12,
+    padding: 14,
+    gap: 8,
+    borderWidth: 1,
+    borderColor: '#E8ECF4',
+  },
+  roleButtonActive: {
+    backgroundColor: '#EEF1FF',
+    borderColor: '#5B6FED',
+  },
+  roleIcon: {
+    fontSize: 20,
+  },
+  roleText: {
+    fontSize: 14,
+    color: '#1E1E1E',
+    fontWeight: '600',
+    flex: 1,
+  },
+  radioOuter: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#E8ECF4',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radioOuterActive: {
+    borderColor: '#5B6FED',
+  },
+  radioInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#5B6FED',
   },
   inputContainer: {
     marginTop: 24,

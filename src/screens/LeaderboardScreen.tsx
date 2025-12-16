@@ -8,6 +8,8 @@ import {
   Image,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RouteProp} from '@react-navigation/native';
+import {ChevronLeft} from 'lucide-react-native';
 import {RootStackParamList} from '../navigation/types';
 
 type LeaderboardNavigationProp = NativeStackNavigationProp<
@@ -15,8 +17,11 @@ type LeaderboardNavigationProp = NativeStackNavigationProp<
   'Leaderboard'
 >;
 
+type LeaderboardRouteProp = RouteProp<RootStackParamList, 'Leaderboard'>;
+
 interface Props {
   navigation: LeaderboardNavigationProp;
+  route: LeaderboardRouteProp;
 }
 
 interface LeaderboardUser {
@@ -27,10 +32,10 @@ interface LeaderboardUser {
   medal?: string;
 }
 
-const LeaderboardScreen: React.FC<Props> = ({navigation}) => {
-  const [activeTab, setActiveTab] = useState<'daily' | 'weekly' | 'monthly'>(
-    'weekly',
-  );
+const LeaderboardScreen: React.FC<Props> = ({navigation, route}) => {
+  const userRole = route.params?.role || 'student';
+  const [activeTab, setActiveTab] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
+  const [viewMode, setViewMode] = useState<'overall' | 'exam'>('overall');
 
   const leaderboardData: LeaderboardUser[] = [
     {rank: 1, name: 'Jennings Stender', points: '890 Points', avatar: '👨', medal: '🥇'},
@@ -48,11 +53,45 @@ const LeaderboardScreen: React.FC<Props> = ({navigation}) => {
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>←</Text>
+          <ChevronLeft size={24} color="#1E1E1E" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Leaderboard</Text>
         <View style={styles.placeholder} />
       </View>
+
+      {/* Teacher View Mode Toggle */}
+      {userRole === 'teacher' && (
+        <View style={styles.viewModeContainer}>
+          <TouchableOpacity
+            style={[
+              styles.viewModeButton,
+              viewMode === 'overall' && styles.viewModeButtonActive,
+            ]}
+            onPress={() => setViewMode('overall')}>
+            <Text
+              style={[
+                styles.viewModeText,
+                viewMode === 'overall' && styles.viewModeTextActive,
+              ]}>
+              Overall 🏆
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.viewModeButton,
+              viewMode === 'exam' && styles.viewModeButtonActive,
+            ]}
+            onPress={() => setViewMode('exam')}>
+            <Text
+              style={[
+                styles.viewModeText,
+                viewMode === 'exam' && styles.viewModeTextActive,
+              ]}>
+              Exam-wise 📝
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Tabs */}
       <View style={styles.tabs}>
@@ -156,7 +195,7 @@ const LeaderboardScreen: React.FC<Props> = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => navigation.navigate('Profile')}>
+          onPress={() => navigation.navigate(userRole === 'teacher' ? 'TeacherProfile' : 'StudentProfile')}>
           <Text style={styles.navIcon}>👤</Text>
           <Text style={styles.navLabel}>Profile</Text>
         </TouchableOpacity>
@@ -199,6 +238,34 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     width: 44,
+  },
+  viewModeContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    marginBottom: 12,
+    gap: 12,
+  },
+  viewModeButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: '#F7F8F9',
+    borderWidth: 1,
+    borderColor: '#E8ECF4',
+    alignItems: 'center',
+  },
+  viewModeButtonActive: {
+    backgroundColor: '#EEF1FF',
+    borderColor: '#5B6FED',
+  },
+  viewModeText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#6A707C',
+  },
+  viewModeTextActive: {
+    color: '#5B6FED',
   },
   tabs: {
     flexDirection: 'row',

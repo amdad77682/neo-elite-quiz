@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {ChevronLeft} from 'lucide-react-native';
 import {RootStackParamList} from '../navigation/types';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -45,7 +46,7 @@ const ExploreScreen: React.FC<Props> = ({navigation}) => {
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>←</Text>
+          <ChevronLeft size={24} color="#1E1E1E" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Explore</Text>
         <View style={styles.placeholder} />
@@ -98,7 +99,7 @@ const ExploreScreen: React.FC<Props> = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => navigation.navigate('Profile')}>
+          onPress={() => navigation.navigate('StudentProfile')}>
           <Text style={styles.navIcon}>👤</Text>
           <Text style={styles.navLabel}>Profile</Text>
         </TouchableOpacity>

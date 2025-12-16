@@ -7,25 +7,20 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RouteProp} from '@react-navigation/native';
 import {ChevronLeft} from 'lucide-react-native';
-import {RootStackParamList} from '../navigation/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../navigation/types';
 
 type ProfileNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'Profile'
+  'StudentProfile'
 >;
-
-type ProfileRouteProp = RouteProp<RootStackParamList, 'Profile'>;
 
 interface Props {
   navigation: ProfileNavigationProp;
-  route: ProfileRouteProp;
 }
 
-const ProfileScreen: React.FC<Props> = ({navigation, route}) => {
-  const userRole = route.params?.role || 'student';
+const StudentProfileScreen: React.FC<Props> = ({navigation}) => {
   const streakDays = [
     {day: 'S', active: false},
     {day: 'M', active: false},
@@ -542,4 +537,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
+export default StudentProfileScreen;

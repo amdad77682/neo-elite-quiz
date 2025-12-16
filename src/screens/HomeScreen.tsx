@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/types';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -19,8 +20,11 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
   'Home'
 >;
 
+type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
+
 interface Props {
   navigation: HomeScreenNavigationProp;
+  route: HomeScreenRouteProp;
 }
 
 interface Category {
@@ -40,9 +44,17 @@ interface Exam {
   color: string;
 }
 
-const HomeScreen: React.FC<Props> = ({navigation}) => {
+const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [showStreakModal, setShowStreakModal] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
+  const userRole = route.params?.role || 'student';
+
+  // Redirect teachers to their dashboard
+  useEffect(() => {
+    if (userRole === 'teacher') {
+      navigation.replace('TeacherDashboard');
+    }
+  }, [userRole, navigation]);
 
   const categories: Category[] = [
     {id: '1', name: 'Math', icon: '📐', color: '#93C5FD'},
@@ -324,7 +336,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
           style={styles.navItem}
           onPress={() => {
             setActiveTab('profile');
-            navigation.navigate('Profile');
+            navigation.navigate('StudentProfile');
           }}>
           <Text style={styles.navIcon}>👤</Text>
           <Text

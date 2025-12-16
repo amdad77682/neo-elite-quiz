@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import {ChevronLeft} from 'lucide-react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/types';
@@ -69,7 +70,7 @@ const OTPVerificationScreen: React.FC<Props> = ({navigation, route}) => {
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>←</Text>
+            <ChevronLeft size={24} color="#1E1E1E" />
           </TouchableOpacity>
 
           <Text style={styles.title}>OTP Verification 🔒</Text>

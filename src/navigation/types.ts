@@ -1,3 +1,5 @@
+export type UserRole = 'student' | 'teacher';
+
 export type RootStackParamList = {
   Splash: undefined;
   Onboarding: undefined;
@@ -11,6 +13,7 @@ export type RootStackParamList = {
     age: string;
     organization: string;
     gender: 'male' | 'female' | '';
+    role: UserRole;
   };
   AvatarSelection: {
     email: string;
@@ -19,15 +22,18 @@ export type RootStackParamList = {
     age: string;
     organization: string;
     gender: 'male' | 'female' | '';
+    role: UserRole;
   };
-  Welcome: undefined;
+  Welcome: {role: UserRole};
   ForgotPassword: undefined;
   OTPVerification: {email: string};
   ResetPassword: undefined;
-  Home: undefined;
-  Leaderboard: undefined;
+  Home: {role: UserRole};
+  Leaderboard: {role: UserRole};
   Explore: undefined;
-  Profile: undefined;
+  Profile: {role: UserRole};
+  StudentProfile: undefined;
+  TeacherProfile: undefined;
   Points: undefined;
   CategoryList: undefined;
   CategoryDetail: {
@@ -61,4 +67,8 @@ export type RootStackParamList = {
     points: number;
   };
   ExamSolution: undefined;
+  TeacherDashboard: undefined;
+  StudentAnalytics: undefined;
+  StudentList: undefined;
+  TeacherExamList: undefined;
 };

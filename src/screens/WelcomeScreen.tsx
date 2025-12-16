@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Animated, Dimensions} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/types';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -10,11 +11,14 @@ type WelcomeNavigationProp = NativeStackNavigationProp<
   'Welcome'
 >;
 
+type WelcomeRouteProp = RouteProp<RootStackParamList, 'Welcome'>;
+
 interface Props {
   navigation: WelcomeNavigationProp;
+  route: WelcomeRouteProp;
 }
 
-const WelcomeScreen: React.FC<Props> = ({navigation}) => {
+const WelcomeScreen: React.FC<Props> = ({navigation, route}) => {
   const fadeAnim = new Animated.Value(0);
   const scaleAnim = new Animated.Value(0.5);
   const slideAnim = new Animated.Value(50);
@@ -40,11 +44,11 @@ const WelcomeScreen: React.FC<Props> = ({navigation}) => {
     ]).start();
 
     const timer = setTimeout(() => {
-      navigation.replace('Home');
+      navigation.replace('Home', {role: route.params.role});
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [navigation]);
+  }, [navigation, route.params.role]);
 
   return (
     <View style={styles.container}>

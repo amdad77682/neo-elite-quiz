@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
+import {ChevronLeft} from 'lucide-react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/types';
 
@@ -51,7 +52,7 @@ const ResetPasswordScreen: React.FC<Props> = ({navigation}) => {
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>←</Text>
+            <ChevronLeft size={24} color="#1E1E1E" />
           </TouchableOpacity>
 
           <Text style={styles.title}>Create New Password 🔐</Text>
