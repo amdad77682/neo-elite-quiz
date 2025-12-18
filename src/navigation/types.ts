@@ -6,6 +6,16 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   RegisterDetails: {email: string};
+  TeacherSelection: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    age: string;
+    organization: string;
+    gender: 'male' | 'female' | '';
+    role: UserRole;
+    password: string;
+  };
   ProfilePicture: {
     email: string;
     firstName: string;
@@ -14,6 +24,8 @@ export type RootStackParamList = {
     organization: string;
     gender: 'male' | 'female' | '';
     role: UserRole;
+    password: string;
+    teacher_id?: string;
   };
   AvatarSelection: {
     email: string;

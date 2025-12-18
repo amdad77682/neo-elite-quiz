@@ -7,11 +7,13 @@ import {
   Image,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/types';
+import ApiService from '../services/api';
 
 type ProfilePictureNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -27,6 +29,7 @@ interface Props {
 
 const ProfilePictureScreen: React.FC<Props> = ({navigation, route}) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const {firstName = 'Mohammad Arafat'} = route.params || {};
 
   const handleChooseAvatar = () => {
@@ -37,8 +40,43 @@ const ProfilePictureScreen: React.FC<Props> = ({navigation, route}) => {
     Alert.alert('Upload Photo', 'Photo upload functionality coming soon!');
   };
 
-  const handleContinue = () => {
-    navigation.navigate('Welcome', {role: route.params.role});
+  const handleContinue = async () => {
+    try {
+      setIsLoading(true);
+
+      const registrationData = {
+        email: route.params.email,
+        first_name: route.params.firstName,
+        last_name: route.params.lastName,
+        age: parseInt(route.params.age, 10),
+        organization: route.params.organization,
+        gender: route.params.gender,
+        role: route.params.role,
+        password: route.params.password,
+        profile_image: selectedImage || undefined,
+        ...(route.params.teacher_id && {teacher_id: route.params.teacher_id}),
+      };
+
+      const response = await ApiService.register(registrationData);
+      
+      Alert.alert(
+        'Success!',
+        'Your account has been created successfully.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Welcome', {role: route.params.role}),
+          },
+        ]
+      );
+    } catch (error: any) {
+      Alert.alert(
+        'Registration Failed',
+        error.message || 'An error occurred during registration. Please try again.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -93,8 +131,15 @@ const ProfilePictureScreen: React.FC<Props> = ({navigation, route}) => {
           <Text style={styles.uploadButtonText}>📷 Upload a Photo</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-          <Text style={styles.continueButtonText}>Continue</Text>
+        <TouchableOpacity 
+          style={[styles.continueButton, isLoading && styles.continueButtonDisabled]} 
+          onPress={handleContinue}
+          disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.continueButtonText}>Continue</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -232,6 +277,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
+  },
+  continueButtonDisabled: {
+    backgroundColor: '#E8ECF4',
   },
   continueButtonText: {
     color: '#FFFFFF',

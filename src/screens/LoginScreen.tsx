@@ -8,9 +8,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/types';
+import ApiService from '../services/api';
+import Toast from 'react-native-toast-message';
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -26,10 +30,50 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<'student' | 'teacher'>('student');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
-    // Navigate to home after login with selected role
-    navigation.navigate('Home', {role});
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Required Fields', 'Please enter both email and password');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await ApiService.login({email, password});
+      
+      // Check if the logged-in user's role matches the selected role
+      if (response.user.role !== role) {
+        Alert.alert(
+          'Role Mismatch',
+          `You are registered as a ${response.user.role}, but trying to login as a ${role}. Please select the correct role.`
+        );
+        return;
+      }
+
+      // Show success toast
+      Toast.show({
+        type: 'success',
+        text1: 'Login Successful',
+        text2: `Welcome back, ${response.user.first_name}! 👋`,
+        position: 'bottom',
+        visibilityTime: 3000,
+      });
+
+      // Navigate based on user's actual role
+      if (response.user.role === 'teacher') {
+        navigation.navigate('TeacherDashboard');
+      } else {
+        navigation.navigate('Home', {role: response.user.role as 'student' | 'teacher'});
+      }
+    } catch (error: any) {
+      Alert.alert(
+        'Login Failed',
+        error.message || 'Invalid email or password. Please try again.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleForgotPassword = () => {
@@ -123,8 +167,15 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Continue</Text>
+          <TouchableOpacity 
+            style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
+            onPress={handleLogin}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={styles.loginButtonText}>Continue</Text>
+            )}
           </TouchableOpacity>
 
           <View style={styles.dividerContainer}>
@@ -329,6 +380,9 @@ const styles = StyleSheet.create({
     color: '#5B6FED',
     fontSize: 14,
     fontWeight: '600',
+  },
+  loginButtonDisabled: {
+    backgroundColor: '#E8ECF4',
   },
 });
 

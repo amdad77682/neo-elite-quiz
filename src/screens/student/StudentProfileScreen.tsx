@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,14 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/types';
+import ApiService from '../../services/api';
+import Toast from 'react-native-toast-message';
 
 type ProfileNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -21,6 +25,52 @@ interface Props {
 }
 
 const StudentProfileScreen: React.FC<Props> = ({navigation}) => {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setIsLoggingOut(true);
+              await ApiService.logout();
+              
+              Toast.show({
+                type: 'success',
+                text1: 'Logged Out',
+                text2: 'You have been logged out successfully',
+                position: 'bottom',
+                visibilityTime: 2000,
+              });
+
+              // Navigate to login screen
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Login'}],
+              });
+            } catch (error: any) {
+              Alert.alert(
+                'Logout Failed',
+                error.message || 'Failed to logout. Please try again.'
+              );
+            } finally {
+              setIsLoggingOut(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const streakDays = [
     {day: 'S', active: false},
     {day: 'M', active: false},
@@ -194,6 +244,18 @@ const StudentProfileScreen: React.FC<Props> = ({navigation}) => {
             </View>
           </View>
         </View>
+
+        {/* Logout Button */}
+        <TouchableOpacity 
+          style={[styles.logoutButton, isLoggingOut && styles.logoutButtonDisabled]}
+          onPress={handleLogout}
+          disabled={isLoggingOut}>
+          {isLoggingOut ? (
+            <ActivityIndicator color="#DC2626" />
+          ) : (
+            <Text style={styles.logoutText}>Logout</Text>
+          )}
+        </TouchableOpacity>
 
         <View style={{height: 100}} />
       </ScrollView>
@@ -534,6 +596,25 @@ const styles = StyleSheet.create({
   navLabelActive: {
     color: '#5B6FED',
     fontWeight: '600',
+  },
+  logoutButton: {
+    backgroundColor: '#FEE2E2',
+    marginHorizontal: 20,
+    marginTop: 20,
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#FCA5A5',
+  },
+  logoutButtonDisabled: {
+    backgroundColor: '#F7F8F9',
+    borderColor: '#E8ECF4',
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#DC2626',
   },
 });
 

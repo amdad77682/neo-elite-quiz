@@ -6,6 +6,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import RegisterDetailsScreen from '../screens/RegisterDetailsScreen';
+import TeacherSelectionScreen from '../screens/TeacherSelectionScreen';
 import ProfilePictureScreen from '../screens/ProfilePictureScreen';
 import AvatarSelectionScreen from '../screens/AvatarSelectionScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
@@ -48,6 +49,7 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="RegisterDetails" component={RegisterDetailsScreen} />
+        <Stack.Screen name="TeacherSelection" component={TeacherSelectionScreen} />
         <Stack.Screen name="ProfilePicture" component={ProfilePictureScreen} />
         <Stack.Screen name="AvatarSelection" component={AvatarSelectionScreen} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />

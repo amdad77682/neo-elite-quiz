@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,14 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ChevronLeft} from 'lucide-react-native';
 import {RootStackParamList} from '../../navigation/types';
+import ApiService from '../../services/api';
+import Toast from 'react-native-toast-message';
 
 type TeacherProfileNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -21,6 +25,52 @@ interface Props {
 }
 
 const TeacherProfileScreen: React.FC<Props> = ({navigation}) => {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setIsLoggingOut(true);
+              await ApiService.logout();
+              
+              Toast.show({
+                type: 'success',
+                text1: 'Logged Out',
+                text2: 'You have been logged out successfully',
+                position: 'bottom',
+                visibilityTime: 2000,
+              });
+
+              // Navigate to login screen
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Login'}],
+              });
+            } catch (error: any) {
+              Alert.alert(
+                'Logout Failed',
+                error.message || 'Failed to logout. Please try again.'
+              );
+            } finally {
+              setIsLoggingOut(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -163,9 +213,14 @@ const TeacherProfileScreen: React.FC<Props> = ({navigation}) => {
 
         {/* Logout Button */}
         <TouchableOpacity 
-          style={styles.logoutButton}
-          onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.logoutText}>Logout</Text>
+          style={[styles.logoutButton, isLoggingOut && styles.logoutButtonDisabled]}
+          onPress={handleLogout}
+          disabled={isLoggingOut}>
+          {isLoggingOut ? (
+            <ActivityIndicator color="#FF4444" />
+          ) : (
+            <Text style={styles.logoutText}>Logout</Text>
+          )}
         </TouchableOpacity>
 
         <View style={{height: 40}} />
@@ -365,6 +420,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#FCA5A5',
+  },
+  logoutButtonDisabled: {
+    backgroundColor: '#F7F8F9',
+    borderColor: '#E8ECF4',
   },
   logoutText: {
     fontSize: 16,

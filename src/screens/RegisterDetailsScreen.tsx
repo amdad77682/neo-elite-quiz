@@ -39,7 +39,7 @@ const RegisterDetailsScreen: React.FC<Props> = ({navigation, route}) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleContinue = () => {
-    navigation.navigate('ProfilePicture', {
+    const registrationData = {
       email: route.params.email,
       firstName,
       lastName,
@@ -47,7 +47,16 @@ const RegisterDetailsScreen: React.FC<Props> = ({navigation, route}) => {
       organization,
       gender,
       role,
-    });
+      password,
+    };
+
+    if (role === 'student') {
+      // Students need to select a teacher
+      navigation.navigate('TeacherSelection', registrationData);
+    } else {
+      // Teachers can proceed directly to profile picture
+      navigation.navigate('ProfilePicture', {...registrationData});
+    }
   };
 
   return (
